@@ -25,3 +25,57 @@ class DbOperations:
       cursor = conn.cursor()
       cursor.execute(query)
       print("Create the table")
+
+  def create_record(self, data, table_name="password_info"):
+    website = data['website']
+    username = data['username']
+    password = data['password']
+    conn = self.connect_to_db()
+    query = f'''
+    INSERT INTO {table_name} ('website', 'username', 'password' ) VALUES
+    (?, ?, ?);
+    '''
+
+    with conn as conn:
+      cursor = conn.cursor()
+      cursor.execute(query, (website, username, password))
+      #print("Saved the record", (website, username, password))
+
+  def show_records(self, table_name="password_info"):
+    conn = self.connect_to_db()
+    query = f'''
+    SELECT * FROM {table_name};
+    '''
+    
+    with conn as conn:
+      cursor = conn.cursor()
+      list_records = cursor.execute(query)
+      return list_records
+
+
+  def update_record(self, data, table_name="password_info"):
+    ID = data['ID']
+    website = data['website']
+    username = data['username']
+    password = data['password']
+    conn = self.connect_to_db()
+    query = f'''
+    UPDATE {table_name} SET website = ?, username =  ?, password = ?, WHERE ID = ?;
+    '''
+    
+    with conn as conn:
+      cursor = conn.cursor()
+      cursor.execute(query, (website, username, password, ID))
+
+
+  def delete_record(self, ID, table_name="password_info"):
+
+    conn = self.connect_to_db()
+    query = f'''
+    DELETE FROM {table_name} WHERE ID = ?;
+    '''
+    
+    with conn as conn:
+      cursor = conn.cursor()
+      cursor.execute(query, (ID,))
+
